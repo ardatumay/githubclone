@@ -17,6 +17,8 @@ export const GET_AUTHENTICATED_USER = gql`query GetAuthenticatedUser
       login
       name
       location
+      avatarUrl
+      bio
     }
   }`
 

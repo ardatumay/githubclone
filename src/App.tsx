@@ -17,6 +17,7 @@ function App() {
     <GlobalStorage>
       <GraphqlClientContext.Provider value={{ uri: githubGraphqlUri, authToken: "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" }} >
         <Main />
+        <Home />
       </GraphqlClientContext.Provider>
     </GlobalStorage>
 
@@ -24,60 +25,30 @@ function App() {
 }
 
 
-// const Home: React.FC = () => {
+const Home: React.FC = () => {
 
 
-//   // const { state, dispatch } = React.useContext(GlobalStorageContext);
+  // const { state, dispatch } = React.useContext(GlobalStorageContext);
 
-//   // React.useEffect(() => {
-//   //   dispatch({ type: globalStorageActions.LOGIN, authToken: "test" })
+  // React.useEffect(() => {
+  //   dispatch({ type: globalStorageActions.LOGIN, authToken: "test" })
 
-//   // }, [])
+  // }, [])
 
-//   // React.useEffect(() => {
-//   //   console.log(state)
-//   // }, [state])
+  // React.useEffect(() => {
+  //   console.log(state)
+  // }, [state])
 
-//   React.useEffect(() => {
-//     console.log(data?.search?.pageInfo)
-//     console.log(error)
+  const [user] = useQuery(Queries.GET_AUTHENTICATED_USER)
 
-//   }, [loading])
+  React.useEffect(() => {
+    console.log(user)
 
-//   const renderRepositories = () => {
+  })
 
-//     return data.search.edges.map((edge) => {
-//       return (
-//         <li>{edge.node.name}</li>
-//       )
-//     })
-//   }
+  return <div>hello
+  </div>
 
-//   // React.useEffect(() => {
-//   //   console.log(data)
-//   // }, [addStarLoading])
-
-//   // React.useEffect(() => {
-//   //   console.log(remData)
-//   // }, [remStarLoading])
-
-//   // React.useEffect(() => {
-//   //   console.log({ updateSubsData, updateSubsError })
-//   // }, [updateSubsLoading])
-
-//   return <div>hello
-//     {/* <button onClick={() => addStar()} > Add Star</button> */}
-//     {/* <button onClick={() => remStar()} > Remove Star</button> */}
-//     {/* <button onClick={() => updateSubs(getUpdateSubscribeRequestData(SubscriptionState.SUBSCRIBED))} > Subscribe Repo</button> */}
-//     {/* <button onClick={() => updateSubs(getUpdateSubscribeRequestData(SubscriptionState.UNSUBSCRIBED))} > Unsubscribe Repo</button> */}
-//     <ul>
-//       {data?.search?.edges.length && renderRepositories()}
-//     </ul>
-//     <button onClick={() => requestPreviousPage()} > prev page</button>
-//     <button onClick={() => requestNextPage()} > next page</button>
-
-//   </div>
-
-// }
+}
 
 export default App;

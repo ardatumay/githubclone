@@ -22,12 +22,7 @@ export const RepositoryContainer: React.FunctionComponent<IRepositoryContainerPr
     React.useEffect(() => {
         let query = props.searchTerm + " in:name,description,readme"
         requestNextPage({ query })
-        console.log(query)
     }, [props.searchTerm])
-
-    React.useEffect(() => {
-        console.log(filterSearchResults(data))
-    }, [loading])
 
     const filterSearchResults = (results) => {
         return results?.search?.edges.map(edge => edge.node)
