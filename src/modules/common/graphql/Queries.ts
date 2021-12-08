@@ -20,6 +20,17 @@ export const GET_AUTHENTICATED_USER = gql`query GetAuthenticatedUser
     }
   }`
 
+export const GET_REPOSITORY_WATCHER_COUNT = gql`query GetRepositoryWatcherCount($id: ID!) 
+  { 
+    node (id: $id) {
+      ... on Repository {
+        watchers {
+        totalCount
+        }
+      }
+    }
+  }`
+
 // Search fields can be parametrized via additional parameters and use of directives on fragments. Potential types -> ISSUE, REPOSITORY, USER, DISCUSSION
 const search = (type) => {
 

@@ -15,7 +15,12 @@ export const REPOSITORY_FIELDS = gql`fragment Repository on Repository
       color
     }
   }
+  primaryLanguage {
+    color
+    name
+  }
   stargazerCount 
+  forkCount
   viewerHasStarred 
   viewerSubscription 
   watchers {

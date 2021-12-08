@@ -6,7 +6,7 @@ import { print } from 'graphql/language/printer'
 import { GraphqlClientContext } from ".."
 import { ErrorType } from "../types"
 
-export const useMutation = (mutation, variables = {}) => {
+export const useMutation = (mutation, variables = {}, runAfterMutation?) => {
 
     const { uri, authToken } = React.useContext(GraphqlClientContext)
 
@@ -40,6 +40,7 @@ export const useMutation = (mutation, variables = {}) => {
                     // If previos request was not successful but current one is successful, set error to null and set data
                     setData(res.data.data)
                     setError(null)
+                    !!runAfterMutation && runAfterMutation()
                 }
             }).catch((errors) => {
                 // If previos request was not successful but current one is successful, set error to null and set data

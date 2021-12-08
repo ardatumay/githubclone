@@ -1,11 +1,12 @@
 import React from 'react';
 import { GraphqlClientContext, useLazyQuery, useMutation, useQuery } from './modules/graphqlClient';
 import { configureAxiosInterceptors, githubGraphqlUri } from './modules/config';
-import { GlobalStorage, globalStorageActions, GlobalStorageContext, Mutations, Queries, SubscriptionState, useConstructor } from './modules/common';
+import { GlobalStorage, globalStorageActions, GlobalStorageContext, Mutations, Queries, SubscriptionState, useConstructor, useFetchListWithPagination } from './modules/common';
+import { Main } from './modules/main';
+import 'antd/dist/antd.css';
 import './App.scss';
 
 // TODO: 1) pagination 2) 404 fallback ui and fallback to login ui 3) axios interceptor for bad credentials 4) check pat scopes 5) login logout screens 6) login validation by wiever request
-
 
 
 function App() {
@@ -15,164 +16,68 @@ function App() {
   return (
     <GlobalStorage>
       <GraphqlClientContext.Provider value={{ uri: githubGraphqlUri, authToken: "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" }} >
-        <Home />
+        <Main />
       </GraphqlClientContext.Provider>
     </GlobalStorage>
 
   );
 }
 
-const useFetchListWithPagination = (requestVariables, query, pageSize) => {
 
-  const defaultParameters = React.useRef({
-    first: pageSize,
-    last: null,
-    after: null,
-    before: null
-  }).current
+// const Home: React.FC = () => {
 
-  const [nextPageParameters, setNextPageParameters] = React.useState<object>(defaultParameters)
-  const [prevPageParameters, setPrevPageParameters] = React.useState<object>(defaultParameters)
 
-  const [req, data, loading, error] = useLazyQuery(query, {
-    ...requestVariables,
-    ...nextPageParameters,
-  })
+//   // const { state, dispatch } = React.useContext(GlobalStorageContext);
 
-  React.useEffect(() => {
-    req()
-  }, [])
+//   // React.useEffect(() => {
+//   //   dispatch({ type: globalStorageActions.LOGIN, authToken: "test" })
 
-  React.useEffect(() => {
-    if (!!data) {
-      let pageInfo = data.search.pageInfo
+//   // }, [])
 
-      let nextPageParameters = {
-        first: pageSize,
-        last: null,
-        after: pageInfo.endCursor,
-        before: null
-      }
-      setNextPageParameters(nextPageParameters)
+//   // React.useEffect(() => {
+//   //   console.log(state)
+//   // }, [state])
 
-      let prevPageParameters = {
-        first: null,
-        last: pageSize,
-        after: null,
-        before: pageInfo.startCursor
-      }
-      setPrevPageParameters(prevPageParameters)
-    }
-  }, [data])
+//   React.useEffect(() => {
+//     console.log(data?.search?.pageInfo)
+//     console.log(error)
 
-  let requestNextPage = (customVariables) => req({
-    ...requestVariables,
-    ...nextPageParameters,
-    ...customVariables
-  })
+//   }, [loading])
 
-  let requestPreviousPage = (customVariables) => req({
-    ...requestVariables,
-    ...prevPageParameters,
-    ...customVariables
-  })
+//   const renderRepositories = () => {
 
-  return [requestNextPage, requestPreviousPage, data, loading, error]
+//     return data.search.edges.map((edge) => {
+//       return (
+//         <li>{edge.node.name}</li>
+//       )
+//     })
+//   }
 
-}
+//   // React.useEffect(() => {
+//   //   console.log(data)
+//   // }, [addStarLoading])
 
-const Home: React.FC = () => {
+//   // React.useEffect(() => {
+//   //   console.log(remData)
+//   // }, [remStarLoading])
 
-  const [requestNextPage, requestPreviousPage, data, loading, error] = useFetchListWithPagination({
-    query: "tedu in:name,description,readme",
-    languageCountToFetch: 3
-  },
-    Queries.GET_REPOSITORY,
-    5
-  )
+//   // React.useEffect(() => {
+//   //   console.log({ updateSubsData, updateSubsError })
+//   // }, [updateSubsLoading])
 
-  // const [userData, userDataLoading, userDataError] = useQuery(Queries.GET_AUTHENTICATED_USER)
-  const [req, repoData, repoDataLoading, repoDataError] = useLazyQuery(Queries.GET_REPOSITORY, {
-    // "query": "language:JavaScript stars:>10000", 
-    query: "tedu in:name,description,readme",
-    first: 4,
-    languageCountToFetch: 3
-  })
+//   return <div>hello
+//     {/* <button onClick={() => addStar()} > Add Star</button> */}
+//     {/* <button onClick={() => remStar()} > Remove Star</button> */}
+//     {/* <button onClick={() => updateSubs(getUpdateSubscribeRequestData(SubscriptionState.SUBSCRIBED))} > Subscribe Repo</button> */}
+//     {/* <button onClick={() => updateSubs(getUpdateSubscribeRequestData(SubscriptionState.UNSUBSCRIBED))} > Unsubscribe Repo</button> */}
+//     <ul>
+//       {data?.search?.edges.length && renderRepositories()}
+//     </ul>
+//     <button onClick={() => requestPreviousPage()} > prev page</button>
+//     <button onClick={() => requestNextPage()} > next page</button>
 
-  // const [addStar, data, addStarLoading, addStarError] = useMutation(Mutations.ADD_STAR, {
-  //   input: {
-  //     starrableId: "R_kgDOGa0MDA"
-  //   }
-  // })
+//   </div>
 
-  // const [remStar, remData, remStarLoading, remStarError] = useMutation(Mutations.REMOVE_STAR, {
-  //   input: {
-  //     starrableId: "R_kgDOGa0MDA"
-  //   }
-  // })
-
-  // const [updateSubs, updateSubsData, updateSubsLoading, updateSubsError] = useMutation(Mutations.UPDATE_SUBSCRIPTION)
-
-  const getUpdateSubscribeRequestData = (state) => {
-    return {
-      input: {
-        subscribableId: "R_kgDOGa0MDA",
-        state: state
-      }
-    }
-  }
-
-  // const { state, dispatch } = React.useContext(GlobalStorageContext);
-
-  // React.useEffect(() => {
-  //   dispatch({ type: globalStorageActions.LOGIN, authToken: "test" })
-
-  // }, [])
-
-  // React.useEffect(() => {
-  //   console.log(state)
-  // }, [state])
-
-  React.useEffect(() => {
-    console.log(data?.search?.pageInfo)
-    console.log(error)
-
-  }, [loading])
-
-  const renderRepositories = () => {
-
-    return data.search.edges.map((edge) => {
-      return (
-        <li>{edge.node.name}</li>
-      )
-    })
-  }
-
-  // React.useEffect(() => {
-  //   console.log(data)
-  // }, [addStarLoading])
-
-  // React.useEffect(() => {
-  //   console.log(remData)
-  // }, [remStarLoading])
-
-  // React.useEffect(() => {
-  //   console.log({ updateSubsData, updateSubsError })
-  // }, [updateSubsLoading])
-
-  return <div>hello
-    {/* <button onClick={() => addStar()} > Add Star</button> */}
-    {/* <button onClick={() => remStar()} > Remove Star</button> */}
-    {/* <button onClick={() => updateSubs(getUpdateSubscribeRequestData(SubscriptionState.SUBSCRIBED))} > Subscribe Repo</button> */}
-    {/* <button onClick={() => updateSubs(getUpdateSubscribeRequestData(SubscriptionState.UNSUBSCRIBED))} > Unsubscribe Repo</button> */}
-    <ul>
-      {data?.search?.edges.length && renderRepositories()}
-    </ul>
-    <button onClick={() => requestPreviousPage()} > prev page</button>
-    <button onClick={() => requestNextPage()} > next page</button>
-
-  </div>
-
-}
+// }
 
 export default App;
