@@ -24,8 +24,8 @@ export const GET_AUTHENTICATED_USER = gql`query GetAuthenticatedUser
 const search = (type) => {
 
   return gql`${REPOSITORY_FIELDS}${PAGE_INFO_FIELDS}  
-  query Search($type: SearchType = ${type}, $query: String!, $first: Int!, $after: String, $before: String, $languageCountToFetch: Int!) { 
-    search(type: $type, query: $query, first: $first, after: $after, before: $before) { 
+  query Search($type: SearchType = ${type}, $query: String!, $first: Int, $last: Int, $after: String, $before: String, $languageCountToFetch: Int!) {
+    search(type: $type, query: $query, first: $first, last: $last, after: $after, before: $before) {
       repositoryCount
       ... pageInfo
       edges {

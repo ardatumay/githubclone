@@ -22,13 +22,14 @@ function App() {
   );
 }
 
-const useFetchListPagination = (requestVariables, query, pageSize) => {
+const useFetchListWithPagination = (requestVariables, query, pageSize) => {
 
   const defaultParameters = React.useRef({
     first: pageSize,
+    last: null,
     after: null,
     before: null
-  })
+  }).current
 
   const [nextPageParameters, setNextPageParameters] = React.useState<object>(defaultParameters)
   const [prevPageParameters, setPrevPageParameters] = React.useState<object>(defaultParameters)
@@ -48,13 +49,15 @@ const useFetchListPagination = (requestVariables, query, pageSize) => {
 
       let nextPageParameters = {
         first: pageSize,
+        last: null,
         after: pageInfo.endCursor,
         before: null
       }
       setNextPageParameters(nextPageParameters)
 
       let prevPageParameters = {
-        first: pageSize,
+        first: null,
+        last: pageSize,
         after: null,
         before: pageInfo.startCursor
       }
@@ -80,6 +83,13 @@ const useFetchListPagination = (requestVariables, query, pageSize) => {
 
 const Home: React.FC = () => {
 
+  const [requestNextPage, requestPreviousPage, data, loading, error] = useFetchListWithPagination({
+    query: "tedu in:name,description,readme",
+    languageCountToFetch: 3
+  },
+    Queries.GET_REPOSITORY,
+    5
+  )
 
   // const [userData, userDataLoading, userDataError] = useQuery(Queries.GET_AUTHENTICATED_USER)
   const [req, repoData, repoDataLoading, repoDataError] = useLazyQuery(Queries.GET_REPOSITORY, {
@@ -124,9 +134,19 @@ const Home: React.FC = () => {
   // }, [state])
 
   React.useEffect(() => {
+    console.log(data?.search?.pageInfo)
+    console.log(error)
 
+  }, [loading])
 
-  }, [repoData])
+  const renderRepositories = () => {
+
+    return data.search.edges.map((edge) => {
+      return (
+        <li>{edge.node.name}</li>
+      )
+    })
+  }
 
   // React.useEffect(() => {
   //   console.log(data)
@@ -145,8 +165,12 @@ const Home: React.FC = () => {
     {/* <button onClick={() => remStar()} > Remove Star</button> */}
     {/* <button onClick={() => updateSubs(getUpdateSubscribeRequestData(SubscriptionState.SUBSCRIBED))} > Subscribe Repo</button> */}
     {/* <button onClick={() => updateSubs(getUpdateSubscribeRequestData(SubscriptionState.UNSUBSCRIBED))} > Unsubscribe Repo</button> */}
-    <button onClick={() => req()} > Unsubscribe Repo</button>
-    <button onClick={() => req()} > Unsubscribe Repo</button>
+    <ul>
+      {data?.search?.edges.length && renderRepositories()}
+    </ul>
+    <button onClick={() => requestPreviousPage()} > prev page</button>
+    <button onClick={() => requestNextPage()} > next page</button>
+
   </div>
 
 }
