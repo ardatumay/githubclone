@@ -1,6 +1,6 @@
 
 import * as React from "react"
-import { List, Avatar, Space } from 'antd';
+import { Avatar, List } from 'antd';
 
 interface IBasicListProps {
     renderItem: (item) => React.ReactNode;
@@ -12,6 +12,14 @@ interface IBasicListProps {
 }
 
 export const BasicList: React.FunctionComponent<IBasicListProps> = (props) => {
+
+
+    const IconText = ({ type, text }) => (
+        <span>
+            {text}
+        </span>
+    );
+
 
     return (
         <List
@@ -30,7 +38,30 @@ export const BasicList: React.FunctionComponent<IBasicListProps> = (props) => {
                     <b>ant design</b> footer part
                 </div>
             }
-            renderItem={props.renderItem}
+            renderItem={item => (
+                <List.Item
+                    key={item.title}
+                    actions={[
+                        <IconText type="star-o" text="156" key="list-vertical-star-o" />,
+                        <IconText type="like-o" text="156" key="list-vertical-like-o" />,
+                        <IconText type="message" text="2" key="list-vertical-message" />,
+                    ]}
+                    extra={
+                        <img
+                            width={272}
+                            alt="logo"
+                            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                        />
+                    }
+                >
+                    <List.Item.Meta
+                        avatar={<Avatar src={item.avatar} />}
+                        title={<a href={item.href}>{item.title}</a>}
+                        description={item.description}
+                    />
+                    {item.content}
+                </List.Item>
+            )}
             loading={props.loading}
         />
     )
