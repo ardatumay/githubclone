@@ -25,3 +25,8 @@
   flex-direction: row;
   align-items: center;
 }
+
+.ant-layout-content {
+  overflow: auto;
+  padding: 0 50px
+}

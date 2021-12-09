@@ -17,7 +17,7 @@ function App() {
     <GlobalStorage>
       <GraphqlClientContext.Provider value={{ uri: githubGraphqlUri, authToken: "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" }} >
         <Main />
-        <Home />
+        {/* <Home /> */}
       </GraphqlClientContext.Provider>
     </GlobalStorage>
 

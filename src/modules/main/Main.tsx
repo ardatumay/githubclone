@@ -1,7 +1,7 @@
 
 import * as React from "react"
 import { Layout, Breadcrumb, Input } from 'antd';
-import { RepositoryContainer, RepositoryList } from "../repository";
+import { RepositoryContainer } from "../repository";
 import "./Main.scss"
 
 const { Header, Content, Footer } = Layout;
@@ -17,7 +17,7 @@ export const Main: React.FunctionComponent = () => {
                 <div className="logo" />
                 <Search style={{ width: 200 }} placeholder="input search text" onSearch={setSearchTerm} allowClear enterButton />
             </Header>
-            <Content style={{ padding: '0 50px' }}>
+            <Content>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
                 </Breadcrumb>
@@ -25,7 +25,7 @@ export const Main: React.FunctionComponent = () => {
                     <RepositoryContainer searchTerm={searchTerm} listPageSize={50} />
                 </div>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+            <Footer style={{ textAlign: 'center' }}>Github Clone - Arda Tümay - 2021</Footer>
         </Layout>
     )
 }
