@@ -55,5 +55,11 @@ export const useLazyQuery = (query, variables = {}) => {
         }
     }
 
-    return [req, data, loading, error]
+    const reset = () => {
+        setLoading(false)
+        setError(null)
+        setData(null)
+    }
+
+    return [req, data, loading, error, reset]
 }

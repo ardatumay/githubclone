@@ -22,7 +22,7 @@ export const Main: React.FunctionComponent = () => {
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
                 </Breadcrumb>
                 <div className="site-layout-content">
-                    <RepositoryContainer searchTerm={searchTerm} listPageSize={50} />
+                    <RepositoryContainer searchTerm={searchTerm} />
                 </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>Github Clone - Arda Tümay - 2021</Footer>

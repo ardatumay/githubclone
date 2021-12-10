@@ -11,10 +11,13 @@ export const useFetchListWithPagination = (requestVariables, query, pageSize, fe
         before: null
     }).current
 
+    const initialRequestMade = React.useRef(false)
+
     const [nextPageParameters, setNextPageParameters] = React.useState<object>(defaultParameters)
     const [prevPageParameters, setPrevPageParameters] = React.useState<object>(defaultParameters)
+    const [reloadAllPagesParameters, setReloadAllPagesParameters] = React.useState<object>(defaultParameters)
 
-    const [req, data, loading, error] = useLazyQuery(query, {
+    const [req, data, loading, error, resetQuery] = useLazyQuery(query, {
         ...requestVariables,
         ...nextPageParameters,
     })
@@ -28,21 +31,29 @@ export const useFetchListWithPagination = (requestVariables, query, pageSize, fe
         if (!!data) {
             let pageInfo = data.search.pageInfo
 
+
+
             let nextPageParameters = {
                 first: pageSize,
-                last: null,
                 after: pageInfo.endCursor,
-                before: null
             }
             setNextPageParameters(nextPageParameters)
 
             let prevPageParameters = {
-                first: null,
                 last: pageSize,
-                after: null,
                 before: pageInfo.startCursor
             }
             setPrevPageParameters(prevPageParameters)
+
+            if (!initialRequestMade.current) {
+                initialRequestMade.current = true
+                let reloadAllPagesParameters = {
+                    first: pageSize,
+                    after: pageInfo.startCursor,
+                }
+                setReloadAllPagesParameters(reloadAllPagesParameters)
+            }
+
         }
     }, [data])
 
@@ -58,6 +69,19 @@ export const useFetchListWithPagination = (requestVariables, query, pageSize, fe
         ...customVariables
     })
 
-    return [requestNextPage, requestPreviousPage, data, loading, error]
+    let reloadAllPages = (customVariables) => req({
+        ...requestVariables,
+        ...reloadAllPagesParameters,
+        ...customVariables
+    })
+
+    const reset = () => {
+        resetQuery()
+        setNextPageParameters(defaultParameters)
+        setPrevPageParameters(defaultParameters)
+        initialRequestMade.current = false
+    }
+
+    return [requestNextPage, requestPreviousPage, reloadAllPages, data, loading, error, reset]
 
 }

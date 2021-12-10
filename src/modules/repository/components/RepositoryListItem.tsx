@@ -8,6 +8,7 @@ import { Repository } from "../types";
 
 interface IRepositoryListItem {
     item: Repository
+    changedListData: (item) => void
 }
 
 export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = (props) => {
@@ -28,24 +29,44 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
         }
     })
 
-    const [updateSubs, updateSubsData, updateSubsLoading, updateSubsError] = useMutation(Mutations.UPDATE_SUBSCRIPTION, {}, getRepoWatcherCount)
+    const [updateSubscription, updateSubsData, updateSubsLoading, updateSubsError] = useMutation(Mutations.UPDATE_SUBSCRIPTION, {}, getRepoWatcherCount)
+
+    // When pagination change in list, item prop passed to this component is changed by list.
+    // So set item with new item in props
+    React.useEffect(() => {
+        setItem(props.item)
+    }, [props.item])
 
     React.useEffect(() => {
-        !!addStartData && setItem({ ...item, stargazerCount: addStartData.addStar.starrable.stargazerCount, viewerHasStarred: addStartData.addStar.starrable.viewerHasStarred })
+        if (!!addStartData) {
+            setItem({ ...item, stargazerCount: addStartData.addStar.starrable.stargazerCount, viewerHasStarred: addStartData.addStar.starrable.viewerHasStarred })
+            props.changedListData({ ...item, stargazerCount: addStartData.addStar.starrable.stargazerCount, viewerHasStarred: addStartData.addStar.starrable.viewerHasStarred })
+        }
     }, [addStartData])
 
     React.useEffect(() => {
-        !!remStarData && setItem({ ...item, stargazerCount: remStarData.removeStar.starrable.stargazerCount, viewerHasStarred: remStarData.removeStar.starrable.viewerHasStarred })
+        if (!!remStarData) {
+            setItem({ ...item, stargazerCount: remStarData.removeStar.starrable.stargazerCount, viewerHasStarred: remStarData.removeStar.starrable.viewerHasStarred })
+            props.changedListData({ ...item, stargazerCount: remStarData.removeStar.starrable.stargazerCount, viewerHasStarred: remStarData.removeStar.starrable.viewerHasStarred })
+        }
     }, [remStarData])
 
     React.useEffect(() => {
-        !!updateSubsData && setItem({ ...item, viewerSubscription: updateSubsData.updateSubscription.subscribable.viewerSubscription })
+        if (!!updateSubsData) {
+            setItem({ ...item, viewerSubscription: updateSubsData.updateSubscription.subscribable.viewerSubscription })
+            props.changedListData({ ...item, viewerSubscription: updateSubsData.updateSubscription.subscribable.viewerSubscription })
+        }
     }, [updateSubsData])
 
     React.useEffect(() => {
-        !!repoWathcherData && setItem({ ...item, watchers: repoWathcherData.node.watchers })
+        if (!!repoWathcherData) {
+            setItem({ ...item, watchers: repoWathcherData.node.watchers })
+            // props.changedListData({ ...item, watchers: repoWathcherData.node.watchers })
+
+        }
     }, [repoWathcherData])
 
+    // Get subscription input data based on new target state of subscription
     const getUpdateSubscribeRequestData = (state) => {
         return {
             input: {
@@ -56,10 +77,12 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
     }
 
     const onClickSubscribe = () => {
+
+        // If user is subscribed, then clicking button will make user unsbcribed and vice versa
         if (item.viewerSubscription == SubscriptionState.SUBSCRIBED)
-            updateSubs(getUpdateSubscribeRequestData(SubscriptionState.UNSUBSCRIBED))
+            updateSubscription(getUpdateSubscribeRequestData(SubscriptionState.UNSUBSCRIBED))
         else
-            updateSubs(getUpdateSubscribeRequestData(SubscriptionState.SUBSCRIBED))
+            updateSubscription(getUpdateSubscribeRequestData(SubscriptionState.SUBSCRIBED))
     }
 
     const IconText = ({ icon, text, onClick }) => (

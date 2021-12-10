@@ -1,0 +1,13 @@
+
+.ant-list .ant-pagination-disabled {
+    button{
+        cursor: default !important;
+        color: rgba(0, 0, 0, 0.85);
+    }
+
+    button:hover {
+        color: #1890ff;
+        border-color: #1890ff;
+        cursor: pointer !important;
+    }
+}
