@@ -100,7 +100,7 @@ export const BasicList: React.FunctionComponent<IBasicListProps> = (props) => {
             }}
             dataSource={getListData()}
             renderItem={props.renderItem}
-            loading={loading || props.loading} // if desired, list loading can be controlled independent from its api request
+            loading={true || props.loading} // if desired, list loading can be controlled independent from its api request
         />
     )
 }

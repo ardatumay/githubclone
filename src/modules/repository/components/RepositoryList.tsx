@@ -1,4 +1,5 @@
 
+import Item from "antd/lib/list/Item";
 import * as React from "react"
 import { BasicList, Queries } from "../../common"
 import { Repository } from "../types";
@@ -27,12 +28,12 @@ export const RepositoryList: React.FunctionComponent<IRepositoryListProps> = (pr
 
         if (listDataToUpdate.length) {
             let updatedList = data.map(item => {
-                return listDataToUpdate.map(updatedItem => {
+                let itemToReturn = item
+                listDataToUpdate.map(updatedItem => {
                     if (item.id == updatedItem.id)
-                        return updatedItem
-
-                    return item
-                })[0]
+                        itemToReturn = updatedItem
+                })
+                return itemToReturn
             })
 
             setData(updatedList)
@@ -41,12 +42,27 @@ export const RepositoryList: React.FunctionComponent<IRepositoryListProps> = (pr
 
     }
 
+    const updateChangedListData = (changedData) => {
+        if (listDataToUpdate.map(item => item.id).includes(changedData.id))
+            setListDataToUpdate(prevState => {
+                return prevState.map((item) => {
+                    if (item.id == changedData.id)
+                        return { ...item, ...changedData }
+                    return item
+                })
+            })
+        else {
+
+            setListDataToUpdate(prevState => prevState.concat(changedData))
+        }
+    }
+
     return (
         <BasicList
             className={"repository-list"}
             size={"large"}
             itemLayout={"horizontal"}
-            renderItem={(item: Repository) => <RepositoryListItem item={item} changedListData={(changedData) => setListDataToUpdate(prevState => prevState.concat(changedData))} />}
+            renderItem={(item: Repository) => <RepositoryListItem item={item} changedListData={updateChangedListData} />}
             filterData={filterSearchResults}
             listQuery={Queries.GET_REPOSITORY}
             defaultRequestParameters={{

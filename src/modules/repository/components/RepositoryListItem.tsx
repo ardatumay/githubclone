@@ -17,17 +17,9 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
 
     const [getRepoWatcherCount, repoWathcherData, repoWathcherLoading, error] = useLazyQuery(Queries.GET_REPOSITORY_WATCHER_COUNT, { id: props.item.id })
 
-    const [addStar, addStartData, addStarLoading, addStarError] = useMutation(Mutations.ADD_STAR, {
-        input: {
-            starrableId: props.item.id
-        }
-    })
+    const [addStar, addStartData, addStarLoading, addStarError] = useMutation(Mutations.ADD_STAR, { input: { starrableId: props.item.id } })
 
-    const [remStar, remStarData, remStarLoading, remStarError] = useMutation(Mutations.REMOVE_STAR, {
-        input: {
-            starrableId: props.item.id
-        }
-    })
+    const [removeStar, removeStarData, remStarLoading, remStarError] = useMutation(Mutations.REMOVE_STAR, { input: { starrableId: props.item.id } })
 
     const [updateSubscription, updateSubsData, updateSubsLoading, updateSubsError] = useMutation(Mutations.UPDATE_SUBSCRIPTION, {}, getRepoWatcherCount)
 
@@ -45,11 +37,11 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
     }, [addStartData])
 
     React.useEffect(() => {
-        if (!!remStarData) {
-            setItem({ ...item, stargazerCount: remStarData.removeStar.starrable.stargazerCount, viewerHasStarred: remStarData.removeStar.starrable.viewerHasStarred })
-            props.changedListData({ ...item, stargazerCount: remStarData.removeStar.starrable.stargazerCount, viewerHasStarred: remStarData.removeStar.starrable.viewerHasStarred })
+        if (!!removeStarData) {
+            setItem({ ...item, stargazerCount: removeStarData.removeStar.starrable.stargazerCount, viewerHasStarred: removeStarData.removeStar.starrable.viewerHasStarred })
+            props.changedListData({ ...item, stargazerCount: removeStarData.removeStar.starrable.stargazerCount, viewerHasStarred: removeStarData.removeStar.starrable.viewerHasStarred })
         }
-    }, [remStarData])
+    }, [removeStarData])
 
     React.useEffect(() => {
         if (!!updateSubsData) {
@@ -61,7 +53,7 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
     React.useEffect(() => {
         if (!!repoWathcherData) {
             setItem({ ...item, watchers: repoWathcherData.node.watchers })
-            // props.changedListData({ ...item, watchers: repoWathcherData.node.watchers })
+            props.changedListData({ ...item, watchers: repoWathcherData.node.watchers })
 
         }
     }, [repoWathcherData])
@@ -94,18 +86,30 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
         </Button>
     );
 
+    const RepoDetail = ({ item }) => {
+        return <div>
+            <p style={{ color: "#24292F", margin: 0 }} >{item.description}</p>
+            <div style={{ display: "flex", alignItems: "center" }} >
+                <Space>
+                    <div style={{ height: 11, width: 11, borderRadius: 50, backgroundColor: item.primaryLanguage?.color }} />
+                    <span style={{ color: "#57606a", alignContent: "center" }} >{item.primaryLanguage?.name}</span>
+                </Space>
+            </div>
+        </div>
+    }
+
     return (
         <List.Item
             key={item.id}
             actions={[
-                <IconText onClick={item.viewerHasStarred ? remStar : addStar} icon={item.viewerHasStarred ? StarFilled : StarOutlined} text={item.stargazerCount} key="list-vertical-star-o" />,
+                <IconText onClick={item.viewerHasStarred ? removeStar : addStar} icon={item.viewerHasStarred ? StarFilled : StarOutlined} text={item.stargazerCount} key="list-vertical-star-o" />,
                 <IconText onClick={onClickSubscribe} icon={item.viewerSubscription == SubscriptionState.SUBSCRIBED ? EyeFilled : EyeOutlined} text={item.watchers.totalCount} key="list-vertical-message" />,
             ]}
         >
             <List.Item.Meta
                 avatar={<BookOutlined />}
                 title={<a target="_blank" href={item.url}>{item.name}</a>}
-                description={item.description}
+                description={<RepoDetail item={item} />}
             />
         </List.Item>
     )

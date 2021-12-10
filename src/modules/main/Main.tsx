@@ -15,7 +15,7 @@ export const Main: React.FunctionComponent = () => {
         <Layout className="layout">
             <Header>
                 <div className="logo" />
-                <Search style={{ width: 200 }} placeholder="input search text" onSearch={setSearchTerm} allowClear enterButton />
+                <Search style={{ width: "25vw" }} placeholder="input search text" onSearch={setSearchTerm} allowClear enterButton />
             </Header>
             <Content>
                 <Breadcrumb style={{ margin: '16px 0' }}>
