@@ -15,4 +15,7 @@ export interface Repository {
     viewerSubscription: SubscriptionState
     watchers: { totalCount }
     primaryLanguage: { name, color }
+    nameWithOwner: string
+    licenseInfo: { name: string }
+    updatedAt: string
 }

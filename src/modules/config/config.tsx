@@ -2,16 +2,17 @@
 import axios from "axios";
 import { message } from 'antd';
 import { IRouteItem } from '../navigation/types/types';
+import { RepositoryContainer } from "../repository";
 
 export const githubGraphqlUri = "https://api.github.com/graphql";
 
 export const routeConfig: IRouteItem[] = [
     {
-        path: "/",
-        element: <div>Dashboard!</div>,
+        path: "/repository",
+        element: <RepositoryContainer />,
     },
     {
-        path: "/classification-type",
+        path: "/login",
         element: <div>Second Screen</div>,
     }
 ];

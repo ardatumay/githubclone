@@ -17,7 +17,7 @@ function App() {
     <GlobalStorage>
       <GraphqlClientContext.Provider value={{ uri: githubGraphqlUri, authToken: "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" }} >
         <Main />
-        {/* <Home /> */}
+        <Home />
       </GraphqlClientContext.Provider>
     </GlobalStorage>
 
@@ -28,7 +28,7 @@ function App() {
 const Home: React.FC = () => {
 
 
-  // const { state, dispatch } = React.useContext(GlobalStorageContext);
+  const { state, dispatch } = React.useContext(GlobalStorageContext);
 
   // React.useEffect(() => {
   //   dispatch({ type: globalStorageActions.LOGIN, authToken: "test" })
@@ -39,14 +39,15 @@ const Home: React.FC = () => {
   //   console.log(state)
   // }, [state])
 
-  const [user] = useQuery(Queries.GET_AUTHENTICATED_USER)
+  const [user] = useQuery(Queries.GET_AUTHENTICATED_USER, { size: 40 })
 
   React.useEffect(() => {
     console.log(user)
+    if (!!user)
+      dispatch({ type: globalStorageActions.LOGIN, authToken: "action.authToken", user: { ...user.viewer } })
+  }, [user])
 
-  })
-
-  return <div>hello
+  return <div>
   </div>
 
 }

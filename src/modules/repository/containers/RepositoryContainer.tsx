@@ -1,30 +1,14 @@
 
 import * as React from "react"
-import { Queries, useFetchListWithPagination } from "../../common"
 import { RepositoryList } from ".."
+import { GlobalStorageContext } from "../../common"
 
-interface IRepositoryContainerProps {
-    searchTerm: string
-}
+// If there will be forms and different lists about repository entity, their rendering process and conditions can be managed in this component
+export const RepositoryContainer: React.FunctionComponent = () => {
 
-export const RepositoryContainer: React.FunctionComponent<IRepositoryContainerProps> = (props) => {
-
-    // const [requestNextPage, requestPreviousPage, data, loading, error] = useFetchListWithPagination(
-    //     {
-    //         languageCountToFetch: 3
-    //     },
-    //     Queries.GET_REPOSITORY,
-    //     props.listPageSize,
-    //     false
-    // )
-
-    // React.useEffect(() => {
-    //     let query = props.searchTerm + " in:name,description,readme"
-    //     requestNextPage({ query })
-    // }, [props.searchTerm])
-
+    const { state } = React.useContext(GlobalStorageContext)
 
     return (
-        <RepositoryList searchTerm={props.searchTerm} />
+        <RepositoryList searchTerm={state.searchText} />
     )
 }

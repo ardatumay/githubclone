@@ -5,6 +5,7 @@ import { EyeOutlined, EyeFilled, BookOutlined, StarOutlined, StarFilled } from '
 import { Mutations, Queries, SubscriptionState } from "../../common"
 import { useLazyQuery, useMutation } from "../../graphqlClient";
 import { Repository } from "../types";
+import "./RepositoryListItem.scss";
 
 interface IRepositoryListItem {
     item: Repository
@@ -77,6 +78,15 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
             updateSubscription(getUpdateSubscribeRequestData(SubscriptionState.SUBSCRIBED))
     }
 
+    const getLastUpdatedDateString = (dateString) => {
+        let [, , , currentYear] = new Date().toDateString().split(" ")
+        let [, month, day, year] = new Date(dateString).toDateString().split(" ")
+
+        if (currentYear == year)
+            return `Updated on ${day} ${month}`
+        return `Updated on ${day} ${month} ${year}`
+    }
+
     const IconText = ({ icon, text, onClick }) => (
         <Button onClick={() => onClick()} >
             <Space>
@@ -88,13 +98,12 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
 
     const RepoDetail = ({ item }) => {
         return <div>
-            <p style={{ color: "#24292F", margin: 0 }} >{item.description}</p>
-            <div style={{ display: "flex", alignItems: "center" }} >
-                <Space>
-                    <div style={{ height: 11, width: 11, borderRadius: 50, backgroundColor: item.primaryLanguage?.color }} />
-                    <span style={{ color: "#57606a", alignContent: "center" }} >{item.primaryLanguage?.name}</span>
-                </Space>
-            </div>
+            <p className="item-description" >{item.description}</p>
+            <Space split={<div className="item-seperator" />} >
+                {!!item.primaryLanguage?.name && <span className="item-detail-element item-layout-row" ><div className="circle" style={{ backgroundColor: item.primaryLanguage?.color }} /> {item.primaryLanguage?.name}</span>}
+                {!!item.licenseInfo?.name && <span className="item-detail-element" >{item.licenseInfo?.name}</span>}
+                <span className="item-detail-element" >{getLastUpdatedDateString(item.updatedAt)}</span>
+            </Space>
         </div>
     }
 
@@ -108,7 +117,7 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
         >
             <List.Item.Meta
                 avatar={<BookOutlined />}
-                title={<a target="_blank" href={item.url}>{item.name}</a>}
+                title={<a className="item-header" target="_blank" href={item.url}>{item.nameWithOwner}</a>}
                 description={<RepoDetail item={item} />}
             />
         </List.Item>

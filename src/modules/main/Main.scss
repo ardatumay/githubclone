@@ -16,18 +16,15 @@
   margin: 16px 0 16px 24px;
 }
 
-.ant-layout.layout {
-  height: 100%;
-}
-
 .ant-layout-header {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0 20vw !important;
+  justify-content: space-between;
 }
 
 .ant-layout-content {
-  overflow: auto;
   padding: 0px 20vw;
+  min-height: unset;
 }

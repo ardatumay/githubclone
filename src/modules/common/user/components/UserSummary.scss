@@ -1,0 +1,51 @@
+
+.user-layout-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    :hover {
+        cursor: pointer;
+    }
+
+    .user-name {
+        color: white;
+        margin-bottom: 0px;
+        font-weight: 600;
+        margin-right: 1em;
+    }
+
+    .caret-down {
+        font-size: 13px;
+        color: white;
+    }
+    
+}
+
+.ant-popover-title {
+        .login {
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 300;
+            color: #57606a;
+            margin-bottom: 0px;
+        }
+
+        a {
+            color: unset;
+        }
+
+        .name {
+            font-size: 18px;
+            margin-bottom: 0px;
+
+            :hover {
+                color: #1890ff;
+            }
+        }
+}
+
+.ant-popover-inner {
+    width: 15vw;
+    min-width: 150px;
+}

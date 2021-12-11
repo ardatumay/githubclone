@@ -19,6 +19,7 @@ export const REPOSITORY_FIELDS = gql`fragment Repository on Repository
     color
     name
   }
+  nameWithOwner
   stargazerCount 
   forkCount
   viewerHasStarred 
@@ -26,6 +27,10 @@ export const REPOSITORY_FIELDS = gql`fragment Repository on Repository
   watchers {
     totalCount 
   }
+  licenseInfo  {
+    name 
+  }
+  updatedAt
 }`
 
 export const PAGE_INFO_FIELDS = gql`fragment pageInfo on SearchResultItemConnection 

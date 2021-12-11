@@ -11,14 +11,15 @@ export const GET_USER_BY_LOGIN = gql`query GetUserByLogin($login: String!)
     }
   }`
 
-export const GET_AUTHENTICATED_USER = gql`query GetAuthenticatedUser 
+export const GET_AUTHENTICATED_USER = gql`query GetAuthenticatedUser($size: Int)
   { 
     viewer { 
       login
       name
       location
-      avatarUrl
+      avatarUrl (size: $size)
       bio
+      url
     }
   }`
 

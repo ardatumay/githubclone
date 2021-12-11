@@ -1,0 +1,37 @@
+
+$element-detail-color: #57606A;
+
+.item-layout-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.item-detail-element {
+    color: $element-detail-color;
+    align-content: center;
+    font-size: 12px;
+}
+
+.circle {
+    height: 11px;
+    width: 11px;
+    shape-outside: circle();
+    clip-path: circle();
+    margin-right: 4px;
+}
+
+.item-seperator {
+    background-color: $element-detail-color;
+    height: 13px;
+    width: 1px;
+}
+
+.item-description {
+    color: #24292F;
+    margin: 0px;
+}
+
+.item-header {
+    font-size: 16px;
+}

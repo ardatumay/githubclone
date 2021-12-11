@@ -1,26 +1,30 @@
 
 
 import * as React from "react";
-import { GlobalStorageContext } from "./GlobalStorageContext";
+import { userInitialValue } from "../user";
+import { GlobalStorageContext, initialState } from "./GlobalStorageContext";
 
 export enum globalStorageActions {
     LOGIN = "LOGIN",
-    LOGOUT = "LOGOUT"
-}
-
-const initialState = {
-    authToken: null,
-    isLoggedIn: false
+    LOGOUT = "LOGOUT",
+    UPDATE_BREADCRUMB = "UPDATE_BREADCRUMB",
+    UPDATE_SEARCH_TEXT = "UPDATE_SEARCH_TEXT"
 }
 
 function reducer(state, action) {
     let newState;
     switch (action.type) {
         case globalStorageActions.LOGIN:
-            newState = { ...state, authToken: action.authToken, isLoggedIn: !!action.authToken };
+            newState = { ...state, authToken: action.authToken, user: action.user };
             break;
         case globalStorageActions.LOGOUT:
-            newState = { ...state, authToken: null, isLoggedIn: false };
+            newState = { ...state, authToken: "", user: userInitialValue, searchText: "" };
+            break;
+        case globalStorageActions.UPDATE_BREADCRUMB:
+            newState = { ...state, breadcrumb: action.breadcrumb };
+            break;
+        case globalStorageActions.UPDATE_SEARCH_TEXT:
+            newState = { ...state, searchText: action.searchText };
             break;
         default:
             break;

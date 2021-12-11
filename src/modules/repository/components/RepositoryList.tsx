@@ -1,7 +1,6 @@
 
-import Item from "antd/lib/list/Item";
 import * as React from "react"
-import { BasicList, Queries } from "../../common"
+import { BasicList, globalStorageActions, GlobalStorageContext, Queries } from "../../common"
 import { Repository } from "../types";
 import { RepositoryListItem } from "./RepositoryListItem";
 
@@ -12,6 +11,8 @@ interface IRepositoryListProps {
 
 export const RepositoryList: React.FunctionComponent<IRepositoryListProps> = (props) => {
 
+    const { dispatch } = React.useContext(GlobalStorageContext)
+
     const [customReqVariables, setCustomReqVariables] = React.useState<object>({})
     const [listDataToUpdate, setListDataToUpdate] = React.useState<any[]>([])
 
@@ -20,9 +21,15 @@ export const RepositoryList: React.FunctionComponent<IRepositoryListProps> = (pr
     }
 
     React.useEffect(() => {
-        let query = !!props.searchTerm ? props.searchTerm + " in:name,description,readme" : ""
-        setCustomReqVariables({ query })
+        if (!!props.searchTerm) {
+            let query = !!props.searchTerm ? props.searchTerm + " in:name,description,readme" : ""
+            setCustomReqVariables({ query })
+        }
     }, [props.searchTerm])
+
+    const getRequestResult = (result) => {
+        dispatch({ type: globalStorageActions.UPDATE_BREADCRUMB, breadcrumb: result?.search?.repositoryCount.toLocaleString() + " repository results found" })
+    }
 
     const updateData = (data, setData) => {
 
@@ -51,10 +58,9 @@ export const RepositoryList: React.FunctionComponent<IRepositoryListProps> = (pr
                     return item
                 })
             })
-        else {
-
+        else
             setListDataToUpdate(prevState => prevState.concat(changedData))
-        }
+
     }
 
     return (
@@ -66,11 +72,14 @@ export const RepositoryList: React.FunctionComponent<IRepositoryListProps> = (pr
             filterData={filterSearchResults}
             listQuery={Queries.GET_REPOSITORY}
             defaultRequestParameters={{
-                languageCountToFetch: 3
+                languageCountToFetch: 3,
+                query: "js in:name,description,readme"
             }}
             customNoDataText={"Oops, no repository found. Try different search text :)"}
             customRequestVariable={customReqVariables}
             updateDataOnPageChange={updateData}
+            fetchDataOnMount={true}
+            getRequestResult={getRequestResult}
         />
     )
 }

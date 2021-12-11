@@ -22,6 +22,7 @@ interface IBasicListProps {
     reloadList?: number
     filterData?: (data: any[]) => any[]
     updateDataOnPageChange?: (data: any[], setData: Function) => void
+    getRequestResult?: (data: any) => void
 }
 
 // Common basic list component to serve common list requirements
@@ -33,6 +34,7 @@ export const BasicList: React.FunctionComponent<IBasicListProps> = (props) => {
     const pageSizeToFetchFromServer = React.useRef(props.pageSizeToFetchFromServer || 50).current
 
     const [listData, setListData] = React.useState([])
+    const [currentPage, setCurrentPage] = React.useState(1)
 
     const [requestNextPage, , reloadAllPages, data, loading, , reset] = useFetchListWithPagination(
         props.defaultRequestParameters, // Supply default request paremeters that does not change after render
@@ -45,6 +47,7 @@ export const BasicList: React.FunctionComponent<IBasicListProps> = (props) => {
         if (!!props.reloadList && props.reloadList > 0) {
             reset()
             reloadAllPages({ first: listData.length, ...props.customRequestVariable })
+            setCurrentPage(1)
             setListData([])
         }
     }, [props.reloadList])
@@ -53,13 +56,17 @@ export const BasicList: React.FunctionComponent<IBasicListProps> = (props) => {
         if (!!props.customRequestVariable && Object.keys(props.customRequestVariable).length) {
             reset()
             setListData([])
+            setCurrentPage(1)
             requestNextPage(props.customRequestVariable)
         }
     }, [props.customRequestVariable])
 
     React.useEffect(() => {
-        if (!!data)
+        if (!!data) {
+            // Data from api can be filtered or modified outside of component
             setListData(prevState => prevState.concat(props.filterData ? props.filterData(data) : data))
+            props.getRequestResult && props.getRequestResult(data)
+        }
     }, [data])
 
     React.useEffect(() => {
@@ -75,14 +82,12 @@ export const BasicList: React.FunctionComponent<IBasicListProps> = (props) => {
         if (props.dataSource)
             return props.dataSource
 
-        listData.slice(0, 5).map((item: any) => console.log("\n" + item.name))
-
-        // Data from api can be filtered or modified outside of component
         return listData
     }
 
     const requestNewPageOnPageChange = (page, pageSize) => {
         !!props.updateDataOnPageChange && props.updateDataOnPageChange(listData, setListData)
+        setCurrentPage(page)
         if (page * pageSize >= listData.length)
             requestNextPage(props.customRequestVariable)
     }
@@ -96,11 +101,12 @@ export const BasicList: React.FunctionComponent<IBasicListProps> = (props) => {
                 onChange: requestNewPageOnPageChange,
                 hideOnSinglePage: true,
                 pageSize: listPageSize,
-                showSizeChanger: false
+                showSizeChanger: false,
+                current: currentPage
             }}
             dataSource={getListData()}
             renderItem={props.renderItem}
-            loading={true || props.loading} // if desired, list loading can be controlled independent from its api request
+            loading={loading || props.loading} // if desired, list loading can be controlled independent from its api request
         />
     )
 }
