@@ -1,25 +1,29 @@
 
 import * as React from "react"
 import { Layout } from 'antd';
-import { RepositoryContainer } from "../repository";
-import { BreadcrumbContainer, SearchBar, UserSummary } from "../common";
+import { BreadcrumbContainer, SearchBar, useGlobalStorage, UserSummary } from "../common";
 import "./Main.scss"
+
+var classNames = require('classnames');
 
 const { Header, Content, Footer } = Layout;
 
-export const Main: React.FunctionComponent = () => {
+export const Main: React.FunctionComponent = (props) => {
 
+    const { state } = useGlobalStorage()
 
     return (
-        <Layout className="layout">
+        <Layout className={classNames({ "full-height": !state.isLoggedIn || !state.searchText })}>
             <Header>
-                <SearchBar />
-                <UserSummary />
+                {state.isLoggedIn && <>
+                    <SearchBar />
+                    <UserSummary />
+                </>}
             </Header>
             <Content>
-                <BreadcrumbContainer />
+                {state.isLoggedIn && <BreadcrumbContainer />}
                 <div className="site-layout-content">
-                    <RepositoryContainer />
+                    {props.children}
                 </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>Github Clone - Arda Tümay - 2021</Footer>

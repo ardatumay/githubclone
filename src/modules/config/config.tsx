@@ -3,17 +3,26 @@ import axios from "axios";
 import { message } from 'antd';
 import { IRouteItem } from '../navigation/types/types';
 import { RepositoryContainer } from "../repository";
+import { AuthenticationContainer, AuthenticateChildren } from "../authentication";
 
 export const githubGraphqlUri = "https://api.github.com/graphql";
 
 export const routeConfig: IRouteItem[] = [
     {
         path: "/repository",
-        element: <RepositoryContainer />,
+        element: <AuthenticateChildren><RepositoryContainer /></AuthenticateChildren>,
+    },
+    {
+        path: "/",
+        element: <AuthenticateChildren><RepositoryContainer /></AuthenticateChildren>,
+    },
+    {
+        path: "*",
+        element: <AuthenticateChildren><RepositoryContainer /></AuthenticateChildren>
     },
     {
         path: "/login",
-        element: <div>Second Screen</div>,
+        element: <AuthenticationContainer />,
     }
 ];
 

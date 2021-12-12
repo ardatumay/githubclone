@@ -1,8 +1,8 @@
 
 
 import * as React from "react";
-import { userInitialValue } from "../user";
-import { GlobalStorageContext, initialState } from "./GlobalStorageContext";
+import { userInitialValue } from "../../user";
+import { GlobalStorageContext, initialState } from "../context";
 
 export enum globalStorageActions {
     LOGIN = "LOGIN",
@@ -15,10 +15,10 @@ function reducer(state, action) {
     let newState;
     switch (action.type) {
         case globalStorageActions.LOGIN:
-            newState = { ...state, authToken: action.authToken, user: action.user };
+            newState = { ...state, isLoggedIn: action.isLoggedIn, user: action.user };
             break;
         case globalStorageActions.LOGOUT:
-            newState = { ...state, authToken: "", user: userInitialValue, searchText: "" };
+            newState = { ...state, isLoggedIn: false, user: userInitialValue, searchText: "", breadcrumb: "" };
             break;
         case globalStorageActions.UPDATE_BREADCRUMB:
             newState = { ...state, breadcrumb: action.breadcrumb };

@@ -1,11 +1,11 @@
 
 import * as React from "react"
-import { GlobalStorageContext } from "../.."
+import { useGlobalStorage } from "../.."
 import { Breadcrumb } from "..";
 
 export const BreadcrumbContainer: React.FunctionComponent = () => {
 
-    const { state } = React.useContext(GlobalStorageContext)
+    const { state } = useGlobalStorage()
 
     return (
         <Breadcrumb items={state.breadcrumb.split(",")} />

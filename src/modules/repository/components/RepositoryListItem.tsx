@@ -16,13 +16,13 @@ export const RepositoryListItem: React.FunctionComponent<IRepositoryListItem> = 
 
     const [item, setItem] = React.useState<Repository>(props.item)
 
-    const [getRepoWatcherCount, repoWathcherData, repoWathcherLoading, error] = useLazyQuery(Queries.GET_REPOSITORY_WATCHER_COUNT, { id: props.item.id })
+    const [getRepoWatcherCount, repoWathcherData, ,] = useLazyQuery(Queries.GET_REPOSITORY_WATCHER_COUNT, { id: props.item.id })
 
-    const [addStar, addStartData, addStarLoading, addStarError] = useMutation(Mutations.ADD_STAR, { input: { starrableId: props.item.id } })
+    const [addStar, addStartData, ,] = useMutation(Mutations.ADD_STAR, { input: { starrableId: props.item.id } })
 
-    const [removeStar, removeStarData, remStarLoading, remStarError] = useMutation(Mutations.REMOVE_STAR, { input: { starrableId: props.item.id } })
+    const [removeStar, removeStarData, ,] = useMutation(Mutations.REMOVE_STAR, { input: { starrableId: props.item.id } })
 
-    const [updateSubscription, updateSubsData, updateSubsLoading, updateSubsError] = useMutation(Mutations.UPDATE_SUBSCRIPTION, {}, getRepoWatcherCount)
+    const [updateSubscription, updateSubsData, ,] = useMutation(Mutations.UPDATE_SUBSCRIPTION, {}, getRepoWatcherCount)
 
     // When pagination change in list, item prop passed to this component is changed by list.
     // So set item with new item in props

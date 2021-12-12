@@ -16,7 +16,7 @@ export const Breadcrumb: React.FunctionComponent<IBreadcrumb> = (props) => {
     }, [props.items])
 
     const renderBreadcrumbItems = () => {
-        return !!(breadcrumbItems && breadcrumbItems.length) && breadcrumbItems.map(item => <AntBreadcrumb.Item><h3>{item}</h3></AntBreadcrumb.Item>)
+        return !!(breadcrumbItems && breadcrumbItems.length) && breadcrumbItems.map((item, key) => <AntBreadcrumb.Item key={key} ><h3>{item}</h3></AntBreadcrumb.Item>)
     }
 
     return (

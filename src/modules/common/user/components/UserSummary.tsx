@@ -1,13 +1,15 @@
 
 import * as React from "react"
-import { Avatar, Popover } from "antd"
+import { Avatar, Button, Popover } from "antd"
 import { UserOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { GlobalStorageContext } from "../.."
+import { globalStorageActions, useGlobalStorage } from "../.."
 import "./UserSummary.scss"
+import { useGraphqlClientContext } from "../../../graphqlClient";
 
 export const UserSummary: React.FunctionComponent = () => {
 
-    const { state } = React.useContext(GlobalStorageContext)
+    const { state, dispatch } = useGlobalStorage()
+    const { setPersonalAccessToken } = useGraphqlClientContext()
 
     const getAvatar = () => {
         return !state.user.avatarUrl ? <Avatar icon={<UserOutlined />} /> : <Avatar src={state.user.avatarUrl} />
@@ -21,10 +23,16 @@ export const UserSummary: React.FunctionComponent = () => {
         )
     }
 
+    const signOut = () => {
+        dispatch({ type: globalStorageActions.LOGOUT })
+        setPersonalAccessToken("")
+    }
+
     const getPopoverContent = () => {
         return <div>
             <p>{state.user.location}</p>
             <p>{state.user.bio}</p>
+            <Button onClick={signOut} >Sign Out</Button>
         </div>
     }
 

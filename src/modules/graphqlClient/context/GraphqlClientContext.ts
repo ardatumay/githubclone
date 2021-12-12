@@ -1,5 +1,19 @@
 
 import * as React from "react";
 
-export const GraphqlClientContext = React.createContext<{ uri: string | null, authToken: string | null }>({ uri: null, authToken: null });
+interface IGraphqlClientContext {
+    url: string | undefined
+    personalAccessToken: string | undefined
+    setUrl: Function
+    setPersonalAccessToken: Function
+}
+
+const initialValue = {
+    url: "",
+    personalAccessToken: "",
+    setUrl: () => { },
+    setPersonalAccessToken: () => { }
+}
+
+export const GraphqlClientContext = React.createContext<IGraphqlClientContext>(initialValue);
 GraphqlClientContext.displayName = "GraphqlClientContext";

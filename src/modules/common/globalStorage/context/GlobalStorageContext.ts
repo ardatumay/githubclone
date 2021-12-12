@@ -1,16 +1,16 @@
 
 import * as React from "react";
-import { IUser, userInitialValue } from "../user";
+import { IUser, userInitialValue } from "../../user";
 
 interface IGlobalStorage {
-    authToken: string
+    isLoggedIn: boolean
     user: IUser
     breadcrumb: string
     searchText: string
 }
 
 export const initialState = {
-    authToken: "",
+    isLoggedIn: false,
     user: userInitialValue,
     breadcrumb: "",
     searchText: ""

@@ -1,13 +1,13 @@
 
 import * as React from "react"
 import { Input } from "antd";
-import { globalStorageActions, GlobalStorageContext } from "..";
+import { globalStorageActions, useGlobalStorage } from "..";
 
 const { Search } = Input;
 
 export const SearchBar: React.FunctionComponent = () => {
 
-    const { dispatch } = React.useContext(GlobalStorageContext)
+    const { dispatch } = useGlobalStorage()
 
     const [searchText, setSearchText] = React.useState("")
 

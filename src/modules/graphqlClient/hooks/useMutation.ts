@@ -3,12 +3,12 @@
 import * as React from "react"
 import axios from "axios"
 import { print } from 'graphql/language/printer'
-import { GraphqlClientContext } from ".."
 import { ErrorType } from "../types"
+import { useGraphqlClientContext } from "."
 
 export const useMutation = (mutation, variables = {}, runAfterMutation?) => {
 
-    const { uri, authToken } = React.useContext(GraphqlClientContext)
+    const { url, personalAccessToken } = useGraphqlClientContext()
 
     const [data, setData] = React.useState<null | object>(null)
     const [error, setError] = React.useState<any>(null)
@@ -21,13 +21,13 @@ export const useMutation = (mutation, variables = {}, runAfterMutation?) => {
         if (!!variablesParam)
             variables = variablesParam
 
-        if (!!uri) {
+        if (!!url) {
             setLoading(true)
             axios({
                 method: 'post',
-                url: uri!,
+                url: url!,
                 headers: {
-                    Authorization: "Bearer " + authToken
+                    Authorization: "Bearer " + personalAccessToken
                 },
                 data: { query: mutation, variables }
             }).then((res) => {

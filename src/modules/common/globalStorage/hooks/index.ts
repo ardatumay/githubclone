@@ -1,0 +1,2 @@
+
+export { useGlobalStorage } from "./useGlobalStorage"
