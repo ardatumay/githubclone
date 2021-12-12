@@ -1,4 +1,4 @@
-# A small react application application that imitates very small subset of github
+# A small react application that imitates very small subset of github
 
 ## Login with github personal access token
 
